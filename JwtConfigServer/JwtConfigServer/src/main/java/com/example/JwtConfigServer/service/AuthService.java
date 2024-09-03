@@ -62,7 +62,7 @@ public class AuthService {
         // 만약 로그인 실패 시 해당 로직은 실행되지 않음.
         TokenResponse token = jwtTokenProvider.generateToken(authentication);
         String userId = signInRequest.getUserId();
-        jwtRedisService.saveToken(userId,token.getRefreshToken());
+        jwtRedisService.save(userId,token.getRefreshToken());
         return token;
     }
 
@@ -95,7 +95,7 @@ public class AuthService {
         }
         TokenResponse newTokenDto = jwtTokenProvider.generateToken(authentication);
         log.info("New Refresh Token -{} -{}",targetUserId,newTokenDto.getRefreshToken());
-        jwtRedisService.saveToken(targetUserId,newTokenDto.getRefreshToken());
+        jwtRedisService.save(targetUserId,newTokenDto.getRefreshToken());
         return newTokenDto;
     }
 
@@ -104,7 +104,7 @@ public class AuthService {
         Optional<String> redisRefreshToken = jwtRedisService.findByUserId(userId);
         if (redisRefreshToken.isPresent()){
             log.info("Logout User. User Id -{}",userId);
-            jwtRedisService.deleteToken(userId);
+            jwtRedisService.delete(userId);
         }else{
             log.info("Already Logout User. User Id -{}",userId);
             return false;
