@@ -49,7 +49,10 @@ public class AuthService {
                 .roles("ROLE_USER")
                 .build();
         memberRepository.save(newMember);
-        return new SignupResponse("Success","","");
+        TokenResponse token = signInProcess(
+                new SignInRequest(newMember.getUserId(),newMember.getPassword())
+        );
+        return new SignupResponse("Success",token.getAccessToken(),token.getRefreshToken());
     }
 
     @Transactional
