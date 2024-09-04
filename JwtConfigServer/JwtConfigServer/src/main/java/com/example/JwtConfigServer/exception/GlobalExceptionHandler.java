@@ -23,6 +23,13 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ex.getErrorCode();
         return handleExceptionInternal(errorCode);
     }
+
+    @ExceptionHandler(UserIdDuplicatedException.class)
+    protected ResponseEntity<ErrorResponse> handleUserIdDuplicatedException(UserIdDuplicatedException ex) {
+        ErrorCode errorCode = ex.getErrorCode();
+        return handleExceptionInternal(errorCode);
+    }
+
     private ResponseEntity<ErrorResponse> handleExceptionInternal(ErrorCode errorCode){
         return ResponseEntity
                 .status(errorCode.getHttpStatus().value())

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+    USER_ID_DUPLICATED(HttpStatus.BAD_REQUEST,"User Id Is Duplicated"),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED,"Jwt Token Is Expired"),
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED,"Jwt Token Is Invalid"),
     TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"Jwt Token is Not Exists"),

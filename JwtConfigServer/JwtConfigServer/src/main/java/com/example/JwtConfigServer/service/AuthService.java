@@ -8,10 +8,7 @@ import com.example.JwtConfigServer.dto.request.TokenRequest;
 import com.example.JwtConfigServer.dto.response.SignupResponse;
 import com.example.JwtConfigServer.dto.response.TokenResponse;
 import com.example.JwtConfigServer.entity.Member;
-import com.example.JwtConfigServer.exception.ErrorCode;
-import com.example.JwtConfigServer.exception.RefreshTokenExpiredException;
-import com.example.JwtConfigServer.exception.RefreshTokenNotEqualsException;
-import com.example.JwtConfigServer.exception.RefreshTokenNotExistException;
+import com.example.JwtConfigServer.exception.*;
 import com.example.JwtConfigServer.jwt.JwtRedisService;
 import com.example.JwtConfigServer.jwt.JwtTokenProvider;
 import com.example.JwtConfigServer.repository.MemberRepository;
@@ -37,9 +34,17 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtRedisService jwtRedisService;
 
+    @Transactional(readOnly = true)
+    public boolean isExistUserIdProcess(String userId){
+        return memberRepository.existsByUserId(userId);
+    }
+
     @Transactional
     public SignupResponse signupProcess(SignupRequest signupRequest) {
 
+        if (isExistUserIdProcess(signupRequest.getUserId())){
+            throw new UserIdDuplicatedException(ErrorCode.USER_ID_DUPLICATED);
+        }
         String encodePassword = passwordEncoder.encode(signupRequest.getPassword());
         Member newMember = Member.builder()
                 .email(signupRequest.getEmail())
