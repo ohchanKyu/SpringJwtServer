@@ -54,8 +54,9 @@ public class AuthService {
                 .roles("ROLE_USER")
                 .build();
         memberRepository.save(newMember);
+        memberRepository.flush();
         TokenResponse token = signInProcess(
-                new SignInRequest(newMember.getUserId(),newMember.getPassword())
+                new SignInRequest(newMember.getUserId(),signupRequest.getPassword())
         );
         return new SignupResponse("Success",token.getAccessToken(),token.getRefreshToken());
     }
